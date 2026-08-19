@@ -1,0 +1,201 @@
+@import 'tailwindcss';
+@import './styles/fonts.css';
+
+/* ---------------------------------------------------------------------------
+   Design tokens.
+   Names mirror the Figma variables in "ChefPro Dashboard High" one-for-one so
+   the two stay greppable against each other. Figma's own names are noted in
+   comments; nothing in a component should carry a raw hex.
+   --------------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Sora', ui-sans-serif, system-ui, sans-serif;
+
+  /* colour ---------------------------------------------------------------- */
+  --color-primary: #d62828; /* Figma: primary color   - CTAs, active nav, progress */
+  --color-primary-hover: #e05e5e; /* Figma: Primary-hover   - hover on every red surface */
+  --color-numeral: #519654; /* Figma: Numeral color   - percentages, positive metrics */
+  --color-text: #0d0d0d; /* Figma: black text */
+  --color-text-muted: #6b7280; /* Figma: grey text */
+  --color-text-inverse: #ffffff; /* Figma: white text color */
+  --color-stroke: #e6e1db; /* Figma: stroke color    - borders, dividers, tracks */
+  --color-bg-01: #f7f3ee; /* Figma: Back 01 color   - warm cream app background */
+  --color-bg-02: #fbfaf9; /* Figma: back 02 color   - header, rail, chips */
+  --color-charcoal: #383838; /* Figma: charcoal color  - dark surfaces */
+  --color-surface: #ffffff;
+
+  /* effects --------------------------------------------------------------- */
+  --shadow-drop-01: 0 1px 4px 0 rgb(0 0 0 / 0.25); /* Figma: Drop 01 */
+  --shadow-drop-02: 0 2px 20px -5px rgb(0 0 0 / 0.25); /* Figma: Drop 02 */
+  --shadow-card-hover: 0 0 4px 2px rgb(0 0 0 / 0.25); /* Chef Card variant2 lift */
+
+  /* type ramp -------------------------------------------------------------
+     Sora throughout. Sizes/leadings read back from the Figma text styles.     */
+  --text-display-l: 36px;
+  --text-display-l--line-height: 57px;
+  --text-heading-xl: 24px;
+  --text-heading-xl--line-height: 36px;
+  --text-heading-l: 24px;
+  --text-heading-l--line-height: 32px;
+  --text-heading-m: 20px;
+  --text-heading-m--line-height: 28px;
+  --text-heading-s: 18px;
+  --text-heading-s--line-height: 28px;
+  --text-heading-xs: 16px;
+  --text-heading-xs--line-height: 24px;
+  --text-body-l: 18px;
+  --text-body-l--line-height: 28px;
+  --text-body-m: 16px;
+  --text-body-m--line-height: 21px;
+  --text-body-s: 14px;
+  --text-body-s--line-height: 21px;
+  --text-body-xs: 12px;
+  --text-body-xs--line-height: 16px;
+  --text-body-2xs: 10px;
+  --text-body-2xs--line-height: 15px;
+
+  /* component-scoped type -------------------------------------------------
+     Off-ramp pairs the design uses in exactly one place each. Kept here rather
+     than widened into the shared ramp.                                        */
+  --text-rating-score: 28px;
+  --text-rating-score--line-height: 40px;
+  --text-rating-denom: 24px;
+  --text-rating-denom--line-height: 20px;
+  --text-meta: 20px;
+  --text-meta--line-height: 21px;
+}
+
+@layer base {
+  /* The app is a fixed-viewport dashboard shell: the header and rail stay put
+     and only the main column scrolls. Without locking the document, the root
+     kept a ~130px scroll of its own behind the shell - a second scrollbar, and
+     worse, clicking a control low in the analytics column let the browser
+     scroll the entire h-screen shell out of view. */
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-bg-01);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* One focus treatment everywhere. Progress and state are never signalled by
+     colour alone (brief 18), so this has to be visible on every surface. */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /* The search field states focus with its own border rather than the shared
+     ring - a 2px outline around a 24px pill reads as a stray red halo. */
+  input[type='search']:focus,
+  input[type='search']:focus-visible {
+    outline: none;
+  }
+
+  /* Chrome draws its own clear button, and it inherits the accent colour
+     (blue). Replaced with the exported close glyph, masked to text black. */
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+    background-color: var(--color-text);
+    -webkit-mask-image: url('./assets/icons/close.svg');
+    mask-image: url('./assets/icons/close.svg');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+  input[type='search']::-webkit-search-cancel-button:hover {
+    background-color: var(--color-primary);
+  }
+}
+
+@layer utilities {
+  /* Icons ship as exported Figma SVGs. Masking them lets a single asset take
+     currentColor, which the nav needs when the active pill flips it to white. */
+  .icon-mask {
+    background-color: currentColor;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Culinary Red scrollbar on the one surface that scrolls. */
+  .scrollbar-primary {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) transparent;
+  }
+  .scrollbar-primary::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .scrollbar-primary::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-primary::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 9999px;
+  }
+  .scrollbar-primary::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-primary-hover);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Keyframes used by the modal, lesson preview and toasts. */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Slow push-in so the media slot reads as running footage while the real
+   video fill is unavailable. */
+@keyframes kenBurns {
+  0%, 100% { transform: scale(1) translate3d(0, 0, 0); }
+  50% { transform: scale(1.12) translate3d(0, -2%, 0); }
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
