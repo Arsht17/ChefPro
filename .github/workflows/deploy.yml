@@ -1,8 +1,12 @@
-name: Deploy to GitHub Pages
+# GitHub Pages is NOT the deploy target - Vercel is, and it builds straight from
+# the repo with no workflow. This is kept as an on-demand alternative only:
+# it runs from the Actions tab, never on push, so it cannot redden the history.
+#
+# Before the first manual run, enable Pages in Settings > Pages with "GitHub
+# Actions" as the source, or the deploy job fails on principle.
+name: Deploy to GitHub Pages (manual)
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
