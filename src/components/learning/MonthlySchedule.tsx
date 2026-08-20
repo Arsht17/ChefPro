@@ -1,19 +1,29 @@
 import { useState } from 'react'
 import type { ChefEvent } from '../../data/types'
+import { Icon } from '../ui/Icon'
 
 const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
-/* The Figma calendar is drawn with March 2026 starting on a Wednesday, and its
-   day cells are still named "May Days" from an earlier pass. March 1 2026 is a
-   Sunday, so the grid is computed here rather than copied - a prototype that
-   reserves a real date should not show it on the wrong weekday. */
-function monthGrid(year: number, month: number) {
-  const first = new Date(year, month, 1)
+type Cell = { day: number; inMonth: boolean }
+
+/* The Figma calendar (48:7269) is drawn with March 2026 starting on a Wednesday
+   and its day cells are still named "May Days" from an earlier pass. March 1
+   2026 is a Sunday, so the grid is computed here rather than copied - a
+   prototype that reserves a real date must not show it on the wrong weekday.
+   Figma's styling is followed exactly; only its arithmetic is not. */
+function monthGrid(year: number, month: number): Cell[] {
   const daysInMonth = new Date(year, month + 1, 0).getDate()
-  const leading = first.getDay()
-  const cells: (number | null)[] = Array.from({ length: leading }, () => null)
-  for (let day = 1; day <= daysInMonth; day += 1) cells.push(day)
-  while (cells.length % 7 !== 0) cells.push(null)
+  const leading = new Date(year, month, 1).getDay()
+  const prevMonthDays = new Date(year, month, 0).getDate()
+  const cells: Cell[] = []
+
+  for (let i = leading; i > 0; i -= 1)
+    cells.push({ day: prevMonthDays - i + 1, inMonth: false })
+  for (let day = 1; day <= daysInMonth; day += 1) cells.push({ day, inMonth: true })
+
+  // Figma greys the days either side of the month rather than leaving holes.
+  let next = 1
+  while (cells.length % 7 !== 0) cells.push({ day: next++, inMonth: false })
   return cells
 }
 
@@ -46,57 +56,66 @@ export function MonthlySchedule({
   const shift = (delta: number) => setCursor(new Date(year, month + delta, 1))
 
   return (
-    <div className="w-[263px] rounded-[16px] border border-stroke bg-white p-6">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="flex flex-col gap-3 rounded-[24px] border border-stroke bg-bg-02 p-6">
+      <div className="flex items-center justify-between">
         <button
           onClick={() => shift(-1)}
-          className="flex size-6 items-center justify-center rounded text-text transition-colors hover:text-primary-hover"
+          className="rounded-[4px] bg-primary p-1 text-text-inverse transition-colors hover:bg-primary-hover"
           aria-label="Previous month"
         >
-          &#8249;
+          <Icon name="chevron" size={16} className="-rotate-90" />
         </button>
-        <span className="text-heading-xs font-semibold text-text">{monthLabel}</span>
+        <span className="text-heading-xs font-bold text-text">{monthLabel}</span>
         <button
           onClick={() => shift(1)}
-          className="flex size-6 items-center justify-center rounded text-text transition-colors hover:text-primary-hover"
+          className="rounded-[4px] bg-primary p-1 text-text-inverse transition-colors hover:bg-primary-hover"
           aria-label="Next month"
         >
-          &#8250;
+          <Icon name="chevron" size={16} className="rotate-90" />
         </button>
       </div>
 
-      <div className="mb-2 grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-1">
         {WEEKDAYS.map((day) => (
           <span
             key={day}
-            className="text-center text-body-2xs font-bold text-text-muted"
+            className="text-center text-body-2xs font-bold uppercase tracking-[1px] text-text-muted"
           >
             {day}
           </span>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1">
-        {cells.map((day, index) => {
-          if (day === null) return <span key={`pad-${index}`} />
-          const dayEvents = eventsByDay.get(day) ?? []
+      <div className="grid grid-cols-7 gap-[6px]">
+        {cells.map((cell, index) => {
+          if (!cell.inMonth)
+            return (
+              <span
+                key={`pad-${index}`}
+                className="flex h-9 items-center justify-center text-body-s text-text-muted/50"
+              >
+                {cell.day}
+              </span>
+            )
+
+          const dayEvents = eventsByDay.get(cell.day) ?? []
           const hasEvent = dayEvents.length > 0
           const isReserved = dayEvents.some((e) => reservedIds.includes(e.id))
 
           return (
             <span
-              key={day}
+              key={`day-${cell.day}`}
               title={hasEvent ? dayEvents.map((e) => e.title).join(', ') : undefined}
               className={[
-                'flex aspect-square items-center justify-center rounded-[6px] text-body-xs transition-colors',
+                'flex h-9 items-center justify-center rounded-[4px] text-body-s transition-colors',
                 isReserved
-                  ? 'bg-primary font-bold text-text-inverse'
+                  ? 'bg-numeral font-bold text-text-inverse'
                   : hasEvent
-                    ? 'border border-primary font-bold text-primary'
+                    ? 'bg-primary font-bold text-text-inverse'
                     : 'text-text',
               ].join(' ')}
             >
-              {day}
+              {cell.day}
               {hasEvent && (
                 <span className="sr-only">
                   {isReserved ? ' - spot reserved' : ' - event scheduled'}
@@ -107,18 +126,16 @@ export function MonthlySchedule({
         })}
       </div>
 
-      <p className="mt-4 flex items-center gap-2 text-body-2xs text-text-muted">
-        <span
-          aria-hidden="true"
-          className="inline-block size-3 rounded-[4px] border border-primary"
-        />
-        Event day
-        <span
-          aria-hidden="true"
-          className="ml-2 inline-block size-3 rounded-[4px] bg-primary"
-        />
-        Reserved
-      </p>
+      <div className="flex items-start gap-4">
+        <span className="flex items-center gap-1 text-body-xs text-charcoal">
+          <span aria-hidden="true" className="size-4 rounded-[4px] bg-primary" />
+          Event day
+        </span>
+        <span className="flex items-center gap-1 text-body-xs text-charcoal">
+          <span aria-hidden="true" className="size-4 rounded-[4px] bg-numeral" />
+          Reserved
+        </span>
+      </div>
     </div>
   )
 }

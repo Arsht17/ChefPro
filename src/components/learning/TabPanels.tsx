@@ -1,4 +1,4 @@
-import { Button } from '../ui/primitives'
+import { Button, Tag } from '../ui/primitives'
 import { Icon } from '../ui/Icon'
 import { LessonPreview } from './LessonPreview'
 import { MonthlySchedule } from './MonthlySchedule'
@@ -138,9 +138,9 @@ export function EventsPanel({ chef }: { chef: Chef }) {
   const items = eventsFor(chef.id)
 
   return (
-    <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
-      <div className="shrink-0">
-        <h4 className="mb-4 text-heading-xs font-semibold text-text">
+    <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
+      <div className="lg:col-span-5">
+        <h4 className="mb-4 text-heading-xs font-bold leading-[28px] text-text">
           Monthly Schedule
         </h4>
         <MonthlySchedule
@@ -149,8 +149,8 @@ export function EventsPanel({ chef }: { chef: Chef }) {
         />
       </div>
 
-      <div className="min-w-0 flex-1">
-        <h4 className="mb-4 text-heading-xs font-semibold text-text">
+      <div className="min-w-0 lg:col-span-7">
+        <h4 className="mb-4 text-heading-xs font-bold leading-[28px] text-text">
           Upcoming Events
         </h4>
         <div className="flex flex-col gap-4">
@@ -159,30 +159,21 @@ export function EventsPanel({ chef }: { chef: Chef }) {
             return (
               <div
                 key={event.id}
-                className="rounded-[16px] border border-stroke bg-white p-6"
+                className="flex flex-col gap-4 rounded-[24px] bg-surface p-6 shadow-drop-01"
               >
-                <div className="mb-3 flex flex-wrap gap-2">
-                  <span className="rounded-[4px] bg-bg-01 px-2 py-0.5 text-body-2xs font-bold text-text uppercase">
-                    {event.minutes} min
-                  </span>
-                  <span className="rounded-[4px] bg-bg-01 px-2 py-0.5 text-body-2xs font-bold text-text uppercase">
-                    {event.format}
-                  </span>
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Tag>{event.minutes} min</Tag>
+                    <Tag>{event.format}</Tag>
+                  </div>
+                  <p className="text-heading-s font-bold leading-[22.5px] text-text">
+                    {event.title}
+                  </p>
                 </div>
-                <p className="text-heading-xs text-text">{event.title}</p>
-                <p className="mt-3 text-body-s text-text-muted">
-                  {event.description}
-                </p>
-                <p className="mt-3 text-body-xs text-text-muted">
-                  {new Date(`${event.date}T00:00:00`).toLocaleDateString(undefined, {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </p>
+                <p className="text-body-s text-text-muted">{event.description}</p>
                 <Button
-                  className="mt-4"
+                  variant={reserved ? 'success' : 'primary'}
+                  className="self-start"
                   disabled={reserved}
                   onClick={() => {
                     dispatch({ type: 'reserveEvent', eventId: event.id })
@@ -192,7 +183,7 @@ export function EventsPanel({ chef }: { chef: Chef }) {
                     )
                   }}
                 >
-                  {reserved ? 'Spot Reserved ✓' : 'Reserve Spot'}
+                  {reserved ? 'Reserved' : 'Reserve Spot'}
                 </Button>
               </div>
             )

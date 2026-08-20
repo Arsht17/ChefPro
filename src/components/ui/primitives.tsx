@@ -8,7 +8,7 @@ import michelinStar from '../../assets/img/michelin-star.webp'
    the design system, and the rule every interactive red surface follows.
    --------------------------------------------------------------------------- */
 
-type ButtonVariant = 'primary' | 'outline' | 'ghost'
+type ButtonVariant = 'primary' | 'success' | 'outline' | 'ghost'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
@@ -23,6 +23,10 @@ const BUTTON_BASE =
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary:
     'bg-primary text-text-inverse hover:bg-primary-hover disabled:hover:bg-primary',
+  /* Figma 48:7269 - a reserved spot turns Numeral green and stays green while
+     disabled, so the calendar swatch and the button read as the same state. */
+  success:
+    'bg-numeral text-text-inverse disabled:opacity-100 disabled:hover:bg-numeral',
   outline:
     'border border-stroke text-text-inverse hover:bg-primary-hover hover:border-primary-hover',
   ghost: 'border border-stroke text-text hover:bg-primary-hover hover:text-text-inverse',
