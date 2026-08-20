@@ -59,8 +59,11 @@ export function MonthlySchedule({
     eventsByDay.set(date.getDate(), list)
   }
 
+  // Abbreviated month - "AUG 2026". The full name pushed the arrows apart at
+  // the card's width, and the short form keeps the header stable across the
+  // long months (September, December) as you page through.
   const monthLabel = cursor.toLocaleDateString(undefined, {
-    month: 'long',
+    month: 'short',
     year: 'numeric',
   })
   const shift = (delta: number) => setCursor(new Date(year, month + delta, 1))
@@ -75,7 +78,9 @@ export function MonthlySchedule({
         >
           <Icon name="chevron" size={16} className="-rotate-90" />
         </button>
-        <span className="text-heading-xs font-bold text-text">{monthLabel}</span>
+        <span className="text-heading-xs font-bold uppercase text-text">
+          {monthLabel}
+        </span>
         <button
           onClick={() => shift(1)}
           className="inline-flex size-6 items-center justify-center rounded-[4px] bg-primary text-text-inverse transition-colors hover:bg-primary-hover"
@@ -143,8 +148,8 @@ export function MonthlySchedule({
         })}
       </div>
 
-      {/* Three keys no longer fit on one line in the card, so the row wraps
-          rather than breaking a label across lines. */}
+      {/* Two keys only, as the design draws it. Today is left unlabelled - the
+          ring reads as "you are here" without needing a key. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <span className="flex items-center gap-1 whitespace-nowrap text-body-xs text-charcoal">
           <span aria-hidden="true" className="size-4 shrink-0 rounded-[4px] bg-primary" />
@@ -153,13 +158,6 @@ export function MonthlySchedule({
         <span className="flex items-center gap-1 whitespace-nowrap text-body-xs text-charcoal">
           <span aria-hidden="true" className="size-4 shrink-0 rounded-[4px] bg-numeral" />
           Reserved
-        </span>
-        <span className="flex items-center gap-1 whitespace-nowrap text-body-xs text-charcoal">
-          <span
-            aria-hidden="true"
-            className="size-4 shrink-0 rounded-[4px] ring-1 ring-inset ring-charcoal"
-          />
-          Today
         </span>
       </div>
     </div>

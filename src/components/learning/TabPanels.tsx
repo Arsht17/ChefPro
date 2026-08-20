@@ -171,6 +171,17 @@ export function EventsPanel({ chef }: { chef: Chef }) {
                   </p>
                 </div>
                 <p className="text-body-s text-text-muted">{event.description}</p>
+                {/* The design frame omits the date, but the calendar alone does
+                    not say which event falls on a highlighted day - so the card
+                    states it. */}
+                <p className="text-body-xs text-text-muted">
+                  {new Date(`${event.date}T00:00:00`).toLocaleDateString(undefined, {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                </p>
                 <Button
                   variant={reserved ? 'success' : 'primary'}
                   className="self-start"
