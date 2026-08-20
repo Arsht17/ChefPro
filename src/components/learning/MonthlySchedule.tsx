@@ -34,11 +34,21 @@ export function MonthlySchedule({
   events: ChefEvent[]
   reservedIds: string[]
 }) {
-  // Seeded to the month the design shows.
-  const [cursor, setCursor] = useState(() => new Date(2026, 2, 1))
+  // Opens on the real current month. The design frame draws March 2026, but the
+  // header already runs a live clock - a calendar that disagreed with it would
+  // read as broken.
+  const [cursor, setCursor] = useState(() => {
+    const now = new Date()
+    return new Date(now.getFullYear(), now.getMonth(), 1)
+  })
   const year = cursor.getFullYear()
   const month = cursor.getMonth()
   const cells = monthGrid(year, month)
+
+  const today = new Date()
+  const showsToday =
+    year === today.getFullYear() && month === today.getMonth()
+  const todayDate = today.getDate()
 
   const eventsByDay = new Map<number, ChefEvent[]>()
   for (const event of events) {
@@ -101,10 +111,12 @@ export function MonthlySchedule({
           const dayEvents = eventsByDay.get(cell.day) ?? []
           const hasEvent = dayEvents.length > 0
           const isReserved = dayEvents.some((e) => reservedIds.includes(e.id))
+          const isToday = showsToday && cell.day === todayDate
 
           return (
             <span
               key={`day-${cell.day}`}
+              aria-current={isToday ? 'date' : undefined}
               title={hasEvent ? dayEvents.map((e) => e.title).join(', ') : undefined}
               className={[
                 'flex h-7 items-center justify-center rounded-[4px] text-body-s transition-colors',
@@ -113,9 +125,14 @@ export function MonthlySchedule({
                   : hasEvent
                     ? 'bg-primary font-bold text-text-inverse'
                     : 'text-text',
+                /* Today is a charcoal outline, so it can sit on top of a red or
+                   green fill instead of competing with it. Inset ring rather
+                   than a border - a border would nudge the digit off centre. */
+                isToday ? 'font-bold ring-1 ring-inset ring-charcoal' : '',
               ].join(' ')}
             >
               {cell.day}
+              {isToday && <span className="sr-only"> - today</span>}
               {hasEvent && (
                 <span className="sr-only">
                   {isReserved ? ' - spot reserved' : ' - event scheduled'}
@@ -126,14 +143,23 @@ export function MonthlySchedule({
         })}
       </div>
 
-      <div className="flex items-start gap-4">
-        <span className="flex items-center gap-1 text-body-xs text-charcoal">
-          <span aria-hidden="true" className="size-4 rounded-[4px] bg-primary" />
+      {/* Three keys no longer fit on one line in the card, so the row wraps
+          rather than breaking a label across lines. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <span className="flex items-center gap-1 whitespace-nowrap text-body-xs text-charcoal">
+          <span aria-hidden="true" className="size-4 shrink-0 rounded-[4px] bg-primary" />
           Event day
         </span>
-        <span className="flex items-center gap-1 text-body-xs text-charcoal">
-          <span aria-hidden="true" className="size-4 rounded-[4px] bg-numeral" />
+        <span className="flex items-center gap-1 whitespace-nowrap text-body-xs text-charcoal">
+          <span aria-hidden="true" className="size-4 shrink-0 rounded-[4px] bg-numeral" />
           Reserved
+        </span>
+        <span className="flex items-center gap-1 whitespace-nowrap text-body-xs text-charcoal">
+          <span
+            aria-hidden="true"
+            className="size-4 shrink-0 rounded-[4px] ring-1 ring-inset ring-charcoal"
+          />
+          Today
         </span>
       </div>
     </div>
