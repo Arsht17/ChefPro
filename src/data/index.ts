@@ -365,13 +365,26 @@ export const recipes: Recipe[] = [
   { id: 'r-scallop', chefId: 'sofia', title: 'Scallop Aguachile', minutes: 15, level: 'Beginner', skillId: 'seafood', thumbnail: thSeabass },
 ]
 
+/* Event dates are pinned to a day-of-month in whatever month the app is opened,
+   not to fixed calendar dates. The Monthly Schedule opens on the current month,
+   so hardcoded dates would leave it empty and the two legend keys pointing at
+   nothing. `day` is clamped to the month's length, so 30 still lands inside
+   February. */
+const eventDate = (day: number) => {
+  const now = new Date()
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+  const d = new Date(now.getFullYear(), now.getMonth(), Math.min(day, lastDay))
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
 export const events: ChefEvent[] = [
   // Marco - transcribed from Figma
   {
     id: 'e-sauces',
     chefId: 'marco',
     title: 'Modern Italian Sauces Masterclass',
-    date: '2026-03-24',
+    date: eventDate(24),
     minutes: 90,
     format: 'Live Online',
     description:
@@ -381,7 +394,7 @@ export const events: ChefEvent[] = [
     id: 'e-qa',
     chefId: 'marco',
     title: 'Chef Q&A: Seasonal Menus',
-    date: '2026-03-29',
+    date: eventDate(30),
     minutes: 45,
     format: 'Live Online',
     description:
@@ -392,7 +405,7 @@ export const events: ChefEvent[] = [
     id: 'e-ferment',
     chefId: 'daniel',
     title: 'Fermentation Lab: Reading a Ferment',
-    date: '2026-03-18',
+    date: eventDate(18),
     minutes: 60,
     format: 'Live Online',
     description:
@@ -402,7 +415,7 @@ export const events: ChefEvent[] = [
     id: 'e-sugar',
     chefId: 'claire',
     title: 'Sugar Work Clinic',
-    date: '2026-03-21',
+    date: eventDate(21),
     minutes: 75,
     format: 'Live Online',
     description:
@@ -412,7 +425,7 @@ export const events: ChefEvent[] = [
     id: 'e-plating',
     chefId: 'sofia',
     title: 'Plating Studio: Negative Space',
-    date: '2026-03-26',
+    date: eventDate(26),
     minutes: 45,
     format: 'Live Online',
     description:
