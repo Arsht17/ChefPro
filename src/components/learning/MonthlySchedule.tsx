@@ -60,7 +60,7 @@ export function MonthlySchedule({
       <div className="flex items-center justify-between">
         <button
           onClick={() => shift(-1)}
-          className="rounded-[4px] bg-primary p-1 text-text-inverse transition-colors hover:bg-primary-hover"
+          className="inline-flex size-6 items-center justify-center rounded-[4px] bg-primary text-text-inverse transition-colors hover:bg-primary-hover"
           aria-label="Previous month"
         >
           <Icon name="chevron" size={16} className="-rotate-90" />
@@ -68,7 +68,7 @@ export function MonthlySchedule({
         <span className="text-heading-xs font-bold text-text">{monthLabel}</span>
         <button
           onClick={() => shift(1)}
-          className="rounded-[4px] bg-primary p-1 text-text-inverse transition-colors hover:bg-primary-hover"
+          className="inline-flex size-6 items-center justify-center rounded-[4px] bg-primary text-text-inverse transition-colors hover:bg-primary-hover"
           aria-label="Next month"
         >
           <Icon name="chevron" size={16} className="rotate-90" />
@@ -92,7 +92,7 @@ export function MonthlySchedule({
             return (
               <span
                 key={`pad-${index}`}
-                className="flex h-9 items-center justify-center text-body-s text-text-muted/50"
+                className="flex h-7 items-center justify-center text-body-s text-text-muted/50"
               >
                 {cell.day}
               </span>
@@ -107,7 +107,7 @@ export function MonthlySchedule({
               key={`day-${cell.day}`}
               title={hasEvent ? dayEvents.map((e) => e.title).join(', ') : undefined}
               className={[
-                'flex h-9 items-center justify-center rounded-[4px] text-body-s transition-colors',
+                'flex h-7 items-center justify-center rounded-[4px] text-body-s transition-colors',
                 isReserved
                   ? 'bg-numeral font-bold text-text-inverse'
                   : hasEvent

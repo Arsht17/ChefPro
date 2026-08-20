@@ -46,7 +46,9 @@ const initialState: AppState = {
   activeLessons: initialActiveLessons,
   savedRecipeIds: [],
   savedTechniqueIds: [],
-  reservedEventIds: [],
+  // Figma 48:7269 shows the Mar 29 Q&A already reserved - green calendar cell,
+  // green RESERVED button - so the state ships seeded rather than empty.
+  reservedEventIds: ['e-qa'],
   bookmarkedChefIds: [],
   recentlyViewedChefIds: [],
   skills: initialSkills,
