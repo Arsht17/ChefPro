@@ -43,7 +43,7 @@ function ContinueLearning() {
                       <p className="text-body-xs text-text-muted">{chef.name}</p>
                     )}
                   </div>
-                  <span className="text-body-s text-numeral tabular-nums">
+                  <span className="text-body-s font-bold text-numeral tabular-nums">
                     {lesson.progress}%
                   </span>
                 </div>
