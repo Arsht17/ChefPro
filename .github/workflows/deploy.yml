@@ -27,6 +27,8 @@ jobs:
       PUPPETEER_SKIP_DOWNLOAD: 'true'
       # Pages serves from /ChefPro/; Vercel and local builds stay at '/'.
       VITE_BASE: /ChefPro/
+      # Absolute origin for the Open Graph tags in index.html.
+      VITE_SITE_URL: https://arsht17.github.io
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

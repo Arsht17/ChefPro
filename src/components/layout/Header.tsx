@@ -86,7 +86,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           <div className="flex items-center gap-3">
             <img
               src={user.avatar}
-              alt=""
+              alt={`${user.name} profile photo`}
               className="size-10 rounded-full border border-stroke object-cover"
             />
             {/* Both lines hang off the same left edge - Figma aligns the name

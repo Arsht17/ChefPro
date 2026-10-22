@@ -63,7 +63,7 @@ export function ChefModal() {
             left half, as the frame composes it. */}
         <img
           src={chef.portrait}
-          alt=""
+          alt={`${chef.name} portrait`}
           className="absolute inset-y-0 right-0 h-full w-[55%] object-cover object-top"
         />
         <div

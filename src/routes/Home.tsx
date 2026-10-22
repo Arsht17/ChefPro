@@ -27,7 +27,7 @@ function ContinueLearning() {
               <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-[16px]">
                 <img
                   src={lesson.thumbnail}
-                  alt=""
+                  alt={lesson.title}
                   className="absolute inset-0 size-full object-cover"
                 />
                 <span className="absolute inset-0 flex items-center justify-center text-white">

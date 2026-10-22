@@ -81,7 +81,7 @@ export function StarBadge({ stars }: { stars: number }) {
   const label = stars === 0 ? 'No star' : `${stars} Star`
   return (
     <span className="inline-flex shrink-0 items-center gap-[2px] rounded-[24px] bg-primary px-2 py-1">
-      <img src={michelinStar} alt="" className="h-[18px] w-6 object-contain" />
+      <img src={michelinStar} alt="Michelin star" className="h-[18px] w-6 object-contain" />
       <span className="text-body-2xs leading-[15px] text-text-inverse uppercase">
         {label}
       </span>

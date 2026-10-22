@@ -7,6 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ChefPro</title>
     <meta name="description" content="ChefPro: discover chef mentors, learn techniques and track your professional development." />
+
+    <!-- Open Graph / Twitter. Crawlers need absolute URLs; VITE_SITE_URL is
+         filled at build time (see vite.config.ts). -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ChefPro" />
+    <meta property="og:title" content="ChefPro" />
+    <meta property="og:description" content="Discover chef mentors, learn techniques and track your professional development." />
+    <meta property="og:url" content="%VITE_SITE_URL%%BASE_URL%" />
+    <meta property="og:image" content="%VITE_SITE_URL%%BASE_URL%og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ChefPro dashboard with recommended chefs, lessons in progress and skill tracking" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ChefPro" />
+    <meta name="twitter:description" content="Discover chef mentors, learn techniques and track your professional development." />
+    <meta name="twitter:image" content="%VITE_SITE_URL%%BASE_URL%og-image.jpg" />
+    <meta name="twitter:image:alt" content="ChefPro dashboard with recommended chefs, lessons in progress and skill tracking" />
   </head>
   <body>
     <div id="root"></div>

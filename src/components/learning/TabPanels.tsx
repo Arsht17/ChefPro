@@ -26,7 +26,7 @@ function LearnRow({
     <div className="flex items-center gap-4 rounded-[24px] bg-white p-6 shadow-drop-01">
       <img
         src={thumbnail}
-        alt=""
+        alt={title}
         className="size-10 shrink-0 rounded-[8px] object-cover"
       />
       <div className="min-w-0 flex-1">
