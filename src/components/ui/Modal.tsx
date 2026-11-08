@@ -73,7 +73,7 @@ export function Modal({ open, onClose, labelledBy, children }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6"
       role="presentation"
     >
       <div
@@ -87,7 +87,11 @@ export function Modal({ open, onClose, labelledBy, children }: ModalProps) {
         aria-modal="true"
         aria-labelledby={labelledBy}
         tabIndex={-1}
-        className="relative flex max-h-[92vh] w-full max-w-[1152px] flex-col overflow-hidden rounded-[24px] bg-white shadow-drop-02 outline-none motion-safe:animate-[panelIn_220ms_ease-out]"
+        /* Below lg the panel itself scrolls, so nothing is pinned and every
+           section can be reached on a short phone screen. From lg up it clips
+           and the content inside owns the scrolling. dvh keeps it clear of
+           mobile browser toolbars. */
+        className="no-scrollbar relative flex max-h-[calc(100dvh-1rem)] w-full max-w-[1152px] flex-col overflow-y-auto overscroll-contain rounded-[20px] bg-white shadow-drop-02 outline-none motion-safe:animate-[panelIn_220ms_ease-out] sm:max-h-[min(92vh,calc(100dvh-3rem))] sm:rounded-[24px] lg:overflow-hidden"
       >
         {children}
       </div>

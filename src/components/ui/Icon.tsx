@@ -15,6 +15,7 @@ import navSettings from '../../assets/icons/nav-settings.svg'
 import play from '../../assets/icons/play.svg'
 import playLg from '../../assets/icons/play-lg.svg'
 import close from '../../assets/icons/close.svg'
+import menu from '../../assets/icons/menu.svg'
 import arrowRight from '../../assets/icons/arrow-right.svg'
 import save from '../../assets/icons/save.svg'
 import chevron from '../../assets/icons/chevron.svg'
@@ -41,6 +42,7 @@ export const icons = {
   play,
   playLg,
   close,
+  menu,
   arrowRight,
   save,
   chevron,

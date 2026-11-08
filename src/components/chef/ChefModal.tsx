@@ -23,9 +23,20 @@ export function ChefModal() {
   const tabColumn = useRef<HTMLDivElement>(null)
 
   // Switching tabs returns the column to the top; content length differs a lot
-  // between Techniques and Events.
+  // between Techniques and Events. Below lg the column does not scroll - the
+  // whole panel does - so the panel is brought back to the tab strip instead,
+  // but only once it has scrolled past it.
   useEffect(() => {
-    tabColumn.current?.scrollTo({ top: 0 })
+    const column = tabColumn.current
+    if (!column) return
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      column.scrollTo({ top: 0 })
+      return
+    }
+    const panel = column.closest<HTMLElement>('[role="dialog"]')
+    if (panel && column.getBoundingClientRect().top < panel.getBoundingClientRect().top) {
+      panel.scrollTo({ top: panel.scrollTop + column.getBoundingClientRect().top - panel.getBoundingClientRect().top })
+    }
   }, [state.activeTab])
 
   if (!chef) return null
@@ -58,7 +69,7 @@ export function ChefModal() {
     <Modal open onClose={close} labelledBy="chef-modal-title">
       {/* Hero - fixed. Keeps the chef's identity and the dismiss control
           reachable no matter how far the panels below are scrolled. */}
-      <div className="relative shrink-0 overflow-hidden bg-charcoal px-6 pt-8 pb-6">
+      <div className="relative shrink-0 overflow-hidden bg-charcoal px-5 pt-6 pb-6 sm:px-6 sm:pt-8">
         {/* Portrait bleeds off the right edge; the copy sits on the solid
             left half, as the frame composes it. */}
         <img
@@ -70,18 +81,20 @@ export function ChefModal() {
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-r from-charcoal from-40% via-charcoal/85 to-charcoal/10"
         />
-        <div className="relative flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
+        <div className="relative flex flex-col gap-5 sm:gap-6">
+          {/* Right padding on phones keeps a long name clear of the close
+              button, which sits over the first two lines there. */}
+          <div className="flex flex-col gap-3 pr-14 sm:gap-4 sm:pr-16 lg:pr-0">
             <p className="text-body-s font-semibold text-text-inverse">
               Master Instructor
             </p>
             <h2
               id="chef-modal-title"
-              className="text-[38px] leading-[44px] font-bold text-text-inverse"
+              className="text-[28px] leading-[34px] font-bold text-text-inverse sm:text-[38px] sm:leading-[44px]"
             >
               {chef.name}
             </h2>
-            <p className="text-heading-m font-semibold text-text-inverse">
+            <p className="text-heading-s font-semibold text-text-inverse sm:text-heading-m">
               {chef.restaurant}, {chef.city}
             </p>
           </div>
@@ -101,15 +114,15 @@ export function ChefModal() {
         <button
           onClick={close}
           aria-label="Close chef details"
-          className="absolute top-6 right-6 flex size-[50px] items-center justify-center rounded-full border border-white/10 bg-white/20 text-text-inverse backdrop-blur-[6px] transition-colors hover:bg-primary-hover"
+          className="absolute top-4 right-4 flex size-11 sm:top-6 sm:right-6 sm:size-[50px] items-center justify-center rounded-full border border-white/10 bg-white/20 text-text-inverse backdrop-blur-[6px] transition-colors hover:bg-primary-hover"
         >
           <Icon name="close" size={24} />
         </button>
       </div>
 
       {/* Meta strip - fixed */}
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-stroke bg-white px-8 py-6">
-        <div className="flex flex-wrap gap-8">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-stroke bg-white px-5 py-5 sm:px-8 sm:py-6">
+        <div className="flex flex-wrap gap-x-8 gap-y-3">
           {[
             { label: 'Focus', value: chef.focus },
             { label: 'Specialty', value: chef.specialty },
@@ -139,10 +152,10 @@ export function ChefModal() {
 
       {/* Scroll region - two columns, each owning its own overflow so the hero
           never leaves the viewport. */}
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+      <div className="flex shrink-0 flex-col lg:min-h-0 lg:flex-1 lg:shrink lg:flex-row">
         <div
           ref={tabColumn}
-          className="no-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain bg-bg-01 px-8 py-6"
+          className="no-scrollbar bg-bg-01 px-4 py-6 sm:px-8 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain"
         >
           {/* Sticky: the tab strip scrolls with the panel in Figma, but losing
               it behind a long Techniques list makes the tabs unreachable. */}
@@ -152,7 +165,7 @@ export function ChefModal() {
           <div
             role="tablist"
             aria-label="Chef content"
-            className="sticky -top-6 z-10 -mx-8 -mt-6 mb-4 flex gap-6 bg-bg-01 px-8 pt-6 pb-3"
+            className="sticky -top-6 z-10 -mx-4 -mt-6 mb-4 flex justify-between gap-2 bg-bg-01 px-4 pt-6 pb-3 sm:-mx-8 sm:justify-start sm:gap-6 sm:px-8"
           >
             {TABS.map((tab, index) => {
               const selected = state.activeTab === tab.id
@@ -175,10 +188,10 @@ export function ChefModal() {
                       : 'border-transparent text-text hover:border-primary-hover hover:text-primary-hover'
                   }`}
                 >
-                  <span className="flex size-10 items-center justify-center">
+                  <span className="hidden size-10 items-center justify-center sm:flex">
                     <Icon name={tab.icon} size={24} />
                   </span>
-                  <span className="text-body-s font-bold tracking-[0.5px] uppercase">
+                  <span className="py-2 text-body-s font-bold tracking-[0.5px] uppercase sm:py-0">
                     {tab.label}
                   </span>
                 </button>
@@ -198,7 +211,7 @@ export function ChefModal() {
           </div>
         </div>
 
-        <aside className="no-scrollbar min-h-0 w-full shrink-0 overflow-y-auto overscroll-contain border-t border-stroke bg-white px-8 py-6 lg:w-[380px] lg:border-t-0 lg:border-l">
+        <aside className="no-scrollbar w-full shrink-0 border-t border-stroke bg-white px-5 py-6 sm:px-8 lg:min-h-0 lg:w-[380px] lg:overflow-y-auto lg:overscroll-contain lg:border-t-0 lg:border-l">
           <h3 className="mb-6 text-heading-xs font-semibold text-text">
             Why this chef matches your goals?
           </h3>

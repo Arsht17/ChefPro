@@ -27,7 +27,8 @@ export function ChefCardRow({ children }: { children: ReactNode }) {
     // Left button only. The drag deliberately starts anywhere, including on
     // the card's own open-modal button - the click is swallowed on release if
     // the pointer actually moved, so a drag never opens a chef.
-    if (event.button !== 0) return
+    // Mouse only: touch and pen already pan the rail natively.
+    if (event.button !== 0 || event.pointerType !== 'mouse') return
     if ((event.target as HTMLElement).closest('input')) return
     const el = ref.current
     if (!el) return
@@ -97,7 +98,7 @@ export function ChefCardRow({ children }: { children: ReactNode }) {
       tabIndex={0}
       role="region"
       aria-label="Recommended chefs, scrollable"
-      className="no-scrollbar -mx-4 -mt-3 flex w-[calc(100%+2rem)] cursor-grab snap-x snap-proximity gap-6 overflow-x-auto px-4 pt-3 pb-4"
+      className="no-scrollbar -mx-4 -mt-3 flex w-[calc(100%+2rem)] cursor-grab snap-x snap-proximity scroll-px-4 gap-4 sm:gap-6 overflow-x-auto px-4 pt-3 pb-4"
     >
       {children}
     </div>

@@ -44,9 +44,9 @@ export function LessonPreview({ technique }: { technique: Technique }) {
   return (
     <div
       ref={ref}
-      className="flex flex-col gap-8 rounded-[16px] bg-charcoal p-8 text-text-inverse motion-safe:animate-[panelIn_220ms_ease-out] lg:flex-row lg:items-start"
+      className="flex flex-col gap-6 rounded-[16px] bg-charcoal p-5 text-text-inverse sm:gap-8 sm:p-8 motion-safe:animate-[panelIn_220ms_ease-out] lg:flex-row lg:items-start"
     >
-      <div className="flex min-w-0 flex-1 flex-col gap-8">
+      <div className="flex min-w-0 flex-1 flex-col gap-6 sm:gap-8">
         <div className="flex flex-col gap-3">
           <span className="text-body-2xs font-bold uppercase">
             Currently Viewing
@@ -68,8 +68,8 @@ export function LessonPreview({ technique }: { technique: Technique }) {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4">
-          <Button onClick={startLearning} className="min-w-[168px] whitespace-nowrap">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+          <Button onClick={startLearning} className="whitespace-nowrap sm:min-w-[168px]">
             Start Learning
             <Icon name="arrowRight" size={16} />
           </Button>

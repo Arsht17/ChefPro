@@ -26,10 +26,12 @@ function NavGroup({
   title,
   items,
   collapsed,
+  onNavigate,
 }: {
   title: string
   items: NavItem[]
   collapsed: boolean
+  onNavigate?: () => void
 }) {
   return (
     <div className="flex w-full flex-col gap-6">
@@ -53,6 +55,7 @@ function NavGroup({
             <NavLink
               to={item.to}
               end={item.to === '/'}
+              onClick={onNavigate}
               title={collapsed ? item.label : undefined}
               className={({ isActive }) =>
                 [
@@ -97,34 +100,60 @@ const PLUS_BENEFITS = [
  * on hover as well as on click. `collapsed` is the pinned preference; hovering
  * (or tabbing into it) previews the expanded state without changing it, which
  * is why the width is driven by `expanded` rather than by the prop directly.
+ *
+ * `drawer` is the phone layout: the same nav, always expanded and filling the
+ * slide-in panel, with `onNavigate` closing the panel once a link is chosen.
  */
-export function Sidebar({ collapsed }: { collapsed: boolean }) {
+export function Sidebar({
+  collapsed,
+  drawer = false,
+  onNavigate,
+}: {
+  collapsed: boolean
+  drawer?: boolean
+  onNavigate?: () => void
+}) {
   const [peeking, setPeeking] = useState(false)
-  const expanded = !collapsed || peeking
+  const expanded = drawer || !collapsed || peeking
 
   return (
     <nav
       aria-label="Main"
-      onMouseEnter={() => setPeeking(true)}
-      onMouseLeave={() => setPeeking(false)}
-      onFocusCapture={() => setPeeking(true)}
+      onMouseEnter={drawer ? undefined : () => setPeeking(true)}
+      onMouseLeave={drawer ? undefined : () => setPeeking(false)}
+      onFocusCapture={drawer ? undefined : () => setPeeking(true)}
       onBlurCapture={(event) => {
+        if (drawer) return
         if (!event.currentTarget.contains(event.relatedTarget as Node)) {
           setPeeking(false)
         }
       }}
-      className={`no-scrollbar flex h-full shrink-0 flex-col justify-between overflow-x-hidden overflow-y-auto rounded-r-[24px] bg-white p-6 transition-[width] duration-300 ease-out ${
-        expanded ? 'w-[320px]' : 'w-[117px]'
+      className={`no-scrollbar flex h-full shrink-0 flex-col justify-between overflow-x-hidden overflow-y-auto bg-white p-6 ${
+        drawer
+          ? 'w-full'
+          : `rounded-r-[24px] transition-[width] duration-300 ease-out ${
+              expanded ? 'w-[320px]' : 'w-[117px]'
+            }`
       }`}
     >
       <div className="flex flex-col items-center gap-10">
-        <NavGroup title="Menu" items={MENU} collapsed={!expanded} />
-        <NavGroup title="Account" items={ACCOUNT} collapsed={!expanded} />
+        <NavGroup
+          title="Menu"
+          items={MENU}
+          collapsed={!expanded}
+          onNavigate={onNavigate}
+        />
+        <NavGroup
+          title="Account"
+          items={ACCOUNT}
+          collapsed={!expanded}
+          onNavigate={onNavigate}
+        />
       </div>
 
       {/* Fixed width so the card renders at full size the instant the rail
           expands, instead of reflowing along with the width transition. */}
-      <div className={`mt-10 ${expanded ? 'w-[272px]' : 'w-full'}`}>
+      <div className={`mt-10 ${drawer ? 'w-full' : expanded ? 'w-[272px]' : 'w-full'}`}>
         {!expanded ? (
           <div className="flex flex-col items-center gap-2 rounded-[12px] border border-stroke bg-bg-02 p-[7px]">
             <p className="text-center text-[10px] leading-3 font-semibold text-text">

@@ -22,9 +22,9 @@ function ContinueLearning() {
           return (
             <article
               key={lesson.id}
-              className="flex flex-wrap items-center gap-6 rounded-[24px] bg-white p-6 shadow-drop-01 sm:flex-nowrap sm:gap-8"
+              className="flex flex-wrap items-center gap-4 rounded-[20px] bg-white p-4 shadow-drop-01 sm:flex-nowrap sm:gap-8 sm:rounded-[24px] sm:p-6"
             >
-              <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-[16px]">
+              <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-[12px] sm:h-20 sm:w-32 sm:rounded-[16px]">
                 <img
                   src={lesson.thumbnail}
                   alt={lesson.title}
@@ -35,7 +35,7 @@ function ContinueLearning() {
                 </span>
               </div>
 
-              <div className="flex min-w-[200px] flex-1 flex-col gap-3">
+              <div className="flex min-w-0 flex-1 flex-col gap-3 sm:min-w-[200px]">
                 <div className="flex items-end justify-between gap-4">
                   <div>
                     <h3 className="text-heading-s text-text">{lesson.title}</h3>
@@ -54,7 +54,7 @@ function ContinueLearning() {
               </div>
 
               <Button
-                className="shrink-0"
+                className="w-full shrink-0 sm:w-auto"
                 onClick={() => {
                   // Resume reopens the lesson's context: its chef, on the tab
                   // the lesson came from.
@@ -93,8 +93,10 @@ export function Home() {
     <div className="flex min-w-0 flex-1 flex-col gap-10 xl:flex-row">
       <div className="flex min-w-0 flex-1 flex-col gap-10">
         <section>
-          <h1 className="text-display-l text-text">Hello {user.name},</h1>
-          <p className="text-heading-l text-text">
+          <h1 className="text-[30px] leading-[44px] text-text sm:text-display-l">
+            Hello {user.name},
+          </h1>
+          <p className="text-heading-s text-text sm:text-heading-l">
             Explore chefs and techniques matched to your learning goals.
           </p>
         </section>

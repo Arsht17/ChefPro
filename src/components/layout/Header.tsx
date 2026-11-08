@@ -24,28 +24,48 @@ function MetaPair({ label, value }: { label: string; value: string }) {
   )
 }
 
-export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
+export function Header({
+  onToggleSidebar,
+  onOpenMobileNav,
+}: {
+  onToggleSidebar: () => void
+  onOpenMobileNav: () => void
+}) {
   const now = useClock()
   const time = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
   const date = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`
 
   return (
-    <header className="flex items-center gap-4 border-b border-stroke bg-bg-01 px-4 pt-6 pb-[25px] xl:px-8">
+    /* Phones wrap the search onto its own full-width row under the logo and
+       account controls; from md up it sits inline as the design draws it. */
+    <header className="flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-stroke bg-bg-01 px-4 pt-4 pb-4 md:flex-nowrap md:pt-6 md:pb-[25px] xl:px-8">
       {/* Logo hugs; the search container is the only thing that flexes. */}
       <div className="flex shrink-0 items-center gap-2 xl:pr-8">
+        {/* Phones have no rail, so the menu button opens the nav drawer. */}
+        <button
+          onClick={onOpenMobileNav}
+          className="-ml-2 flex size-10 items-center justify-center rounded-full text-text transition-colors hover:bg-primary-hover hover:text-text-inverse md:hidden"
+          aria-label="Open navigation"
+          aria-haspopup="dialog"
+        >
+          <Icon name="menu" size={24} />
+        </button>
+        <span className="flex size-10 items-center justify-center rounded-[4px] bg-primary text-text-inverse md:hidden">
+          <Icon name="logoChef" size={32} />
+        </span>
         <button
           onClick={onToggleSidebar}
-          className="flex size-10 items-center justify-center rounded-[4px] bg-primary text-text-inverse transition-colors hover:bg-primary-hover"
+          className="hidden size-10 items-center justify-center rounded-[4px] bg-primary text-text-inverse transition-colors hover:bg-primary-hover md:flex"
           aria-label="Toggle navigation"
         >
           <Icon name="logoChef" size={32} />
         </button>
-        <span className="hidden text-heading-m tracking-[-0.5px] text-text sm:inline">
+        <span className="text-heading-m tracking-[-0.5px] text-text">
           ChefPRO
         </span>
       </div>
 
-      <div className="min-w-0 flex-1">
+      <div className="order-last w-full min-w-0 md:order-none md:w-auto md:flex-1">
         <form
           className="relative w-full max-w-[672px]"
           role="search"
@@ -70,7 +90,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         </form>
       </div>
 
-      <div className="flex shrink-0 items-center gap-4">
+      <div className="ml-auto flex shrink-0 items-center gap-4 md:ml-0">
         <div className="hidden items-start gap-4 lg:flex">
           <MetaPair label="Time" value={time} />
           <MetaPair label="Date" value={date} />

@@ -25,7 +25,7 @@ export function ChefCard({ chef }: { chef: Chef }) {
        an onClick on the article: it keeps one real <button> for the card and
        avoids nesting it around the bookmark and the three tab actions, which
        are separate controls sitting above it in the stacking order. */
-    <article className="group relative flex h-[540px] w-[481px] max-w-[calc(100vw-4rem)] shrink-0 snap-start flex-col overflow-hidden rounded-[24px] bg-white shadow-drop-01 transition-shadow duration-200 ease-out hover:shadow-card-hover focus-within:shadow-card-hover">
+    <article className="group relative flex w-[481px] max-w-[calc(100vw-4rem)] shrink-0 sm:h-[540px] snap-start flex-col overflow-hidden rounded-[24px] bg-white shadow-drop-01 transition-shadow duration-200 ease-out hover:shadow-card-hover focus-within:shadow-card-hover">
       <button
         onClick={() => open('techniques')}
         tabIndex={-1}
@@ -33,7 +33,7 @@ export function ChefCard({ chef }: { chef: Chef }) {
         className="absolute inset-0 z-0 cursor-pointer"
       />
 
-      <div className="pointer-events-none relative h-[254px] w-full shrink-0 overflow-hidden">
+      <div className="pointer-events-none relative h-[200px] w-full shrink-0 overflow-hidden sm:h-[254px]">
         {/* Figma's fill, per card:
               url(...) lightgray <x> <y> / 100% <height>% no-repeat
             The height differs by card because the sources do - Marco's photo is
@@ -59,7 +59,7 @@ export function ChefCard({ chef }: { chef: Chef }) {
               ? `Remove ${chef.name} from favourites`
               : `Save ${chef.name} to favourites`
           }
-          className={`pointer-events-auto absolute top-4 right-4 z-10 flex size-[50px] items-center justify-center rounded-full border backdrop-blur-[6px] transition-colors ${
+          className={`pointer-events-auto absolute top-4 right-4 z-10 flex size-11 sm:size-[50px] items-center justify-center rounded-full border backdrop-blur-[6px] transition-colors ${
             bookmarked
               ? 'border-primary-hover bg-primary-hover text-text-inverse'
               : 'border-white/10 bg-white/20 text-text-inverse hover:bg-primary-hover'
@@ -69,7 +69,7 @@ export function ChefCard({ chef }: { chef: Chef }) {
         </button>
       </div>
 
-      <div className="pointer-events-none relative z-10 flex flex-1 flex-col gap-3 p-8">
+      <div className="pointer-events-none relative z-10 flex flex-1 flex-col gap-4 p-5 sm:gap-3 sm:p-8">
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-2">
             <div className="flex items-start justify-between gap-3">

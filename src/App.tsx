@@ -1,7 +1,9 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { HashRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { AppStateProvider, useApp } from './state/AppState'
 import { Header } from './components/layout/Header'
 import { Sidebar } from './components/layout/Sidebar'
+import { MobileNav } from './components/layout/MobileNav'
 import { ChefModal } from './components/chef/ChefModal'
 import { Toasts } from './components/ui/Toasts'
 import { Home } from './routes/Home'
@@ -10,6 +12,16 @@ import { NotDesigned } from './routes/NotDesigned'
 
 function Shell() {
   const { state, dispatch } = useApp()
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const closeMobileNav = useCallback(() => setMobileNavOpen(false), [])
+  const mainRef = useRef<HTMLElement>(null)
+  const { pathname } = useLocation()
+
+  // <main> is the scroller, not the window, so a new page would otherwise open
+  // at the previous page's scroll position.
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 })
+  }, [pathname])
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-bg-01">
@@ -20,7 +32,10 @@ function Shell() {
         Skip to content
       </a>
 
-      <Header onToggleSidebar={() => dispatch({ type: 'toggleSidebar' })} />
+      <Header
+        onToggleSidebar={() => dispatch({ type: 'toggleSidebar' })}
+        onOpenMobileNav={() => setMobileNavOpen(true)}
+      />
 
       <div className="flex min-h-0 flex-1">
         {/* Full-height rail: the row is the only thing that scrolls, so the
@@ -30,6 +45,7 @@ function Shell() {
         </div>
 
         <main
+          ref={mainRef}
           id="main"
           className="scrollbar-primary min-w-0 flex-1 overflow-y-auto px-4 py-6 xl:px-8"
         >
@@ -94,6 +110,7 @@ function Shell() {
         </main>
       </div>
 
+      <MobileNav open={mobileNavOpen} onClose={closeMobileNav} />
       <ChefModal />
       <Toasts />
     </div>

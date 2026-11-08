@@ -23,15 +23,15 @@ function LearnRow({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex items-center gap-4 rounded-[24px] bg-white p-6 shadow-drop-01">
+    <div className="flex items-center gap-3 rounded-[20px] bg-white p-4 shadow-drop-01 sm:gap-4 sm:rounded-[24px] sm:p-6">
       <img
         src={thumbnail}
         alt={title}
         className="size-10 shrink-0 rounded-[8px] object-cover"
       />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-body-s font-bold text-text">{title}</p>
-        <p className="mt-1.5 flex items-center gap-3 text-body-xs text-text-muted">
+        <p className="line-clamp-2 text-body-s font-bold text-text sm:truncate">{title}</p>
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-3 text-body-xs whitespace-nowrap text-text-muted">
           <span>{minutes} min</span>
           <span aria-hidden="true">&bull;</span>
           <span>{level}</span>
@@ -111,7 +111,7 @@ export function RecipesPanel({ chef }: { chef: Chef }) {
         )
       })}
 
-      <div className="flex flex-col gap-4 rounded-[16px] bg-charcoal p-8 text-text-inverse sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[16px] bg-charcoal p-6 text-text-inverse sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div className="min-w-0">
           <p className="text-heading-xs font-semibold">Want custom suggestions?</p>
           <p className="mt-2 text-body-s text-white/80">
@@ -159,7 +159,7 @@ export function EventsPanel({ chef }: { chef: Chef }) {
             return (
               <div
                 key={event.id}
-                className="flex flex-col gap-4 rounded-[24px] bg-surface p-6 shadow-drop-01"
+                className="flex flex-col gap-4 rounded-[20px] bg-surface p-5 shadow-drop-01 sm:rounded-[24px] sm:p-6"
               >
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap items-center gap-2">
